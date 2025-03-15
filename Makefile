@@ -1,8 +1,10 @@
-
-TestRust: BuildRust CopyRust
+all: BuildRust CopyRust BuildHap
 
 BuildRust:
-	cd daisy_native && ohrs build --release -a arm64
+	$(MAKE) -C daisy_native
 
 CopyRust:
-	rsync -av --exclude oh-package.json5  daisy_native/dist/ entry/libs/
+	rsync -av --exclude oh-package.json5 daisy_native/dist/ entry/libs/
+
+BuildHap:
+	hvigorw assembleApp --mode project -p product=default -p buildMode=debug --no-daemon
