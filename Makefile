@@ -1,3 +1,5 @@
+Default: BuildRust CopyRust
+
 all: BuildRust CopyRust BuildHap
 
 BuildRust:

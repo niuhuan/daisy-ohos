@@ -1,23 +1,22 @@
+import { context } from './components/Context'
+import router from '@ohos.router';
+import rust from 'libdaisy_native.so'
+
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
+  aboutToAppear(): void {
+    this.init()
+  }
+
+  async init() {
+    await rust.autoClean(3600 * 24 * 7)
+    await context.login()
+    router.replaceUrl({
+      url: 'pages/Home',
+    })
+  }
 
   build() {
-    RelativeContainer() {
-      Text(this.message)
-        .id('HelloWorld')
-        .fontSize($r('app.float.page_text_font_size'))
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
-        })
-        .onClick(() => {
-          this.message = 'Welcome';
-        })
-    }
-    .height('100%')
-    .width('100%')
   }
 }

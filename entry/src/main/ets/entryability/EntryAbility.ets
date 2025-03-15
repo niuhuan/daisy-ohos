@@ -1,6 +1,7 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import rust from 'libdaisy_native.so'
 
 const DOMAIN = 0x0000;
 
@@ -18,12 +19,21 @@ export default class EntryAbility extends UIAbility {
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
+    this.init(windowStage)
+  }
+
+  async init(windowStage: window.WindowStage) {
+    try {
+      await rust.init(this.context.filesDir);
+    } catch (e) {
+      hilog.error(0x0000, 'init', `${e}`);
+    }
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {
-        hilog.error(DOMAIN, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err));
+        hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
-      hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
+      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content.');
     });
   }
 
