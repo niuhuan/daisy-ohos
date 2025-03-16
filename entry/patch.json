@@ -1,0 +1,11 @@
+{
+  "app": {
+    "bundleName": "opensource.oh.daisy",
+    "patchVersionCode": 2000037,
+    "versionCode": 1000000
+  },
+  "module": {
+    "name": "entry",
+    "type": "hotreload"
+  }
+}

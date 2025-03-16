@@ -49,27 +49,15 @@ pub struct LoginInfo {
     pub data: Option<LoginData>,
 }
 
-lazy_static! {
-    static ref PRELOGIN_ED: Mutex<bool> = Mutex::new(false);
-    static ref LAST_LOGIN_INFO: Mutex<Option<LoginInfo>> = Mutex::new(None);
-}
-
-#[napi]
-pub async fn pre_login(nickname: String, passwd: String) -> LoginInfo {
-    let mut lock = PRELOGIN_ED.lock().await;
-    if *lock {
-        return LAST_LOGIN_INFO.lock().await.clone().unwrap();
-    }
-    *lock = true;
-    let info = re_login(nickname, passwd);
-    drop(lock);
-    info.await
-}
-
 #[napi]
 pub async fn re_login(nickname: String, passwd: String) -> LoginInfo {
     let client = CLIENT.read().await;
-    let login_data = match client.login(nickname, passwd).await {
+    let password_md5_uppercase = md5::compute(passwd.as_bytes())
+        .0
+        .iter()
+        .map(|b| format!("{:02X}", b))
+        .collect::<String>();
+    let login_data = match client.login(nickname, password_md5_uppercase).await {
         Ok(value) => value,
         Err(e) => {
             let err_data = LoginInfo {
@@ -115,8 +103,6 @@ pub async fn re_login(nickname: String, passwd: String) -> LoginInfo {
         message: "".to_string(),
         data: Some(login_data),
     };
-    let mut last = LAST_LOGIN_INFO.lock().await;
-    *last = Some(info.clone());
     info
 }
 
@@ -189,7 +175,12 @@ pub async fn load_cache_image(
             .map_err(map_anyhow)?;
         let format = match image::guess_format(&bytes) {
             Ok(img_format) => img_format,
-            Err(_) => return Err(std::io::Error::new(std::io::ErrorKind::Other, "decode img error".to_string())),
+            Err(_) => {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::Other,
+                    "decode img error".to_string(),
+                ))
+            }
         };
         let format = if let Some(format) = format.extensions_str().first() {
             format.to_string()
@@ -250,8 +241,8 @@ pub async fn comic_recommend() -> Result<Vec<ComicInFilter>> {
 }
 
 #[napi]
-pub async fn comic_update_list(sort: i64, page: i64) -> Result<Vec<ComicUpdateListItem>> {
-    let key = format!("COMIC_UPDATE_LIST${}${}", sort, page);
+pub async fn comic_update_list(comic_type_id: i64, page: i64) -> Result<Vec<ComicUpdateListItem>> {
+    let key = format!("COMIC_UPDATE_LIST${}${}", comic_type_id, page);
     web_cache::cache_first(
         key,
         Duration::from_secs(60 * 60 * 2),
@@ -259,7 +250,7 @@ pub async fn comic_update_list(sort: i64, page: i64) -> Result<Vec<ComicUpdateLi
             CLIENT
                 .read()
                 .await
-                .comic_update_list(ComicType::from_value(sort)?, page)
+                .comic_update_list(ComicType::from_value(comic_type_id)?, page)
                 .await
         }),
     )
