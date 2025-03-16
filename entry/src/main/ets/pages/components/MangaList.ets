@@ -1,6 +1,7 @@
 import { Error } from './Error'
 import { Loading } from './Loading';
 import { MangaCard, MangaCardData } from './MangaCard';
+import { navStack } from './Nav';
 import { Nothing } from './Nothing';
 
 interface MangaLoader {
@@ -63,7 +64,9 @@ export struct MangaList {
         ForEach(this.mangaList, (item: MangaCardData, idx: number) => {
           ListItem() {
             MangaCard({ item: item })
-          }
+          }.onClick(() => {
+            this.goToMangaInfo(item);
+          })
         })
         ListItem() {
           this.paddingLastItem()
@@ -76,5 +79,12 @@ export struct MangaList {
 
   @Builder
   paddingLastItem() {
+  }
+
+  goToMangaInfo(item: MangaCardData) {
+    navStack.pushPath(new NavPathInfo(
+      'pages/MangaInfo',
+      item,
+    ))
   }
 }

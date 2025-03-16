@@ -7,6 +7,9 @@ import { Manga } from "./Manga"
 import { Novel } from "./Novel"
 import { Person } from "./Persion"
 import { AppStorageV2 } from "@kit.ArkUI"
+import { MangaCard } from "./components/MangaCard"
+import { MangaInfo } from "./MangaInfo"
+import { MangaReader } from "./MangaReader"
 
 @Entry
 @ComponentV2
@@ -25,6 +28,14 @@ struct Home {
   pageMap(name: string) {
     if (name == 'pages/Login') {
       Login()
+    } else if (name == 'pages/MangaInfo') {
+      MangaInfo()
+    } else if (name == 'pages/MangaReader') {
+      MangaReader()
+    } else {
+      NavDestination() {
+        Text("未找到页面 404")
+      }
     }
   }
 

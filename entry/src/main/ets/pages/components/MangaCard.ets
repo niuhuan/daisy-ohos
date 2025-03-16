@@ -72,6 +72,7 @@ export struct MangaCard {
       color: '#33666666',
       width: .4,
     })
+    .width('100%')
   }
 }
 
