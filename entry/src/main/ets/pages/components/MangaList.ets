@@ -14,7 +14,7 @@ interface MangaLoader {
 @Component
 export struct MangaList {
   @State loading: boolean = false;
-  @State needLoadPageNumber: number = 1;
+  @State needLoadPageNumber: number = 0;
   @State end: boolean = false;
   @State mangaList: Array<MangaCardData> = [];
   @State error: boolean = false;

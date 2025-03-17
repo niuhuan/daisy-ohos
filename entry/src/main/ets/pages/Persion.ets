@@ -11,7 +11,28 @@ export struct Person {
 
   build() {
     List() {
-      this.profile()
+      ListItem() {
+        this.profile()
+      }
+
+      ListItem() {
+        Divider()
+          .strokeWidth(.5)
+          .width('100%')
+          .color('#66cccccc')
+          .margin({
+            top: 10,
+            bottom: 20,
+          })
+      }
+
+      ListItem() {
+        this.mangaHistories()
+      }
+
+      ListItem() {
+        this.novelHistories()
+      }
     }
   }
 
@@ -31,14 +52,14 @@ export struct Person {
         .height(80)
         .textAlign(TextAlign.Center)
         .borderRadius(50)
-        .onClick(() => {
-          this.onProfileClick()
-        })
       Blank().height(30)
       Text(this.profileName())
       Blank().height(40)
     }.align(Alignment.Center)
     .width('100%')
+    .onClick(() => {
+      this.onProfileClick()
+    })
   }
 
   profileIcon(): string {
@@ -64,12 +85,54 @@ export struct Person {
     if (this.loginListen.loginState.status == 2) {
       return `登录失败 ${this.loginListen.loginState.message}`
     }
-    return '未登录';
+    return '点击卡片进行登录';
   }
 
   onProfileClick() {
     if (this.loginListen.loginState.status == -1 || this.loginListen.loginState.status == 2) {
       navStack.pushPath(new NavPathInfo('pages/Login', ''))
     }
+  }
+
+  @Builder
+  mangaHistories() {
+    Flex({ direction: FlexDirection.Row }) {
+      Text('漫画 - 历史记录')
+    }
+    .padding({
+      top: 18,
+      bottom: 18,
+      left: 25,
+      right: 25
+    })
+    .border({
+      color: '#33666666',
+      width: .4,
+    })
+    .width('100%')
+    .onClick(()=>{
+      navStack.pushPath(new NavPathInfo(
+        'pages/MangaHistories',
+        '',
+      ))
+    })
+  }
+
+  @Builder
+  novelHistories() {
+    Flex({ direction: FlexDirection.Row }) {
+      Text('小说 - 历史记录')
+    }
+    .padding({
+      top: 18,
+      bottom: 18,
+      left: 25,
+      right: 25
+    })
+    .border({
+      color: '#33666666',
+      width: .4,
+    })
+    .width('100%')
   }
 }

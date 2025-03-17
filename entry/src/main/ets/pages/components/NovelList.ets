@@ -16,7 +16,7 @@ interface NovelLoader {
 @Component
 export struct NovelList {
   @State loading: boolean = false;
-  @State needLoadPageNumber: number = 1;
+  @State needLoadPageNumber: number = 0;
   @State end: boolean = false;
   @State mangaList: Array<NovelInFilter> = [];
   @State error: boolean = false;

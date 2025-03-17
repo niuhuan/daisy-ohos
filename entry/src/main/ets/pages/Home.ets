@@ -12,6 +12,7 @@ import { MangaInfo } from "./MangaInfo"
 import { MangaReader } from "./MangaReader"
 import { NovelReader } from "./NovelReader"
 import { NovelInfo } from "./NovelInfo"
+import { MangaHistories } from "./MangaHistories"
 
 @Entry
 @ComponentV2
@@ -34,6 +35,8 @@ struct Home {
       MangaInfo()
     } else if (name == 'pages/MangaReader') {
       MangaReader()
+    } else if (name == 'pages/MangaHistories') {
+      MangaHistories()
     } else if (name == 'pages/NovelInfo') {
       NovelInfo()
     } else if (name == 'pages/NovelReader') {
