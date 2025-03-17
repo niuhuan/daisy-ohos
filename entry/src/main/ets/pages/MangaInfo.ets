@@ -7,13 +7,13 @@ import { MangaReaderParam } from "./MangaReader"
 import { hilog } from "@kit.PerformanceAnalysisKit"
 
 @Entry
-@ComponentV2
+@Component
 export struct MangaInfo {
-  @Local loadState: '' | 'success' | string = ''
-  @Local mangaCardData: MangaCardData | null = null;
-  @Local mangaDetail: ComicDetail | null = null;
-  @Local mangaViewLog: ComicViewLog | null = null;
-  @Local firstShow: boolean = true;
+  @State loadState: '' | 'success' | string = ''
+  @State mangaCardData: MangaCardData | null = null;
+  @State mangaDetail: ComicDetail | null = null;
+  @State mangaViewLog: ComicViewLog | null = null;
+  @State firstShow: boolean = true;
 
   async reloadViewLog() {
     hilog.warn(0, 'testTag', '%{public}s', 'reloadViewLog');
@@ -149,9 +149,13 @@ export struct MangaInfo {
           }
         }.layoutWeight(1)
       }.width('100%').height('100%')
-    }.onReady((c) => {
+    }
+    .onReady((c) => {
       this.mangaCardData = c.pathInfo.param as MangaCardData;
       this.init()
+    })
+    .onHidden(() => {
+      this.mangaViewLog = null;
     })
     .onShown(() => {
       if (this.firstShow) {
@@ -160,6 +164,7 @@ export struct MangaInfo {
       }
       this.reloadViewLog()
     })
-    .width('100%').height('100%')
+    .width('100%')
+    .height('100%')
   }
 }
