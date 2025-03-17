@@ -1,4 +1,4 @@
-import rust from 'libdaisy_native.so'
+import rust, { ComicDetail, Item } from 'libdaisy_native.so'
 import { CachedImage } from './CachedImage'
 import { materialIconData, materialIconsFontFamily } from './MaterialIcons'
 import { colors } from './Themes'
@@ -7,7 +7,8 @@ export interface MangaCardData {
   id: number
   cover: string
   title: string
-  authors: string
+  authors?: string
+  authorItems?: Array<Item>
   lastUpdateTime: number
 }
 
@@ -37,10 +38,17 @@ export struct MangaCard {
         Text(`${this.item.title}\n`)
           .maxLines(2)
           .fontWeight(FontWeight.Bold)
-        Blank(10)
-        Text(this.item.authors)
-          .fontSize(14)
-          .fontColor(colors.authorColor)
+        if (this.item.authorItems != null && this.item.authorItems.length > 0) {
+          Blank(10)
+          Text(this.item.authorItems.map((e) => e.title).join("、"))
+            .fontSize(14)
+            .fontColor(colors.authorColor)
+        } else if (this.item.authors != null && this.item.authors.length > 0) {
+          Blank(10)
+          Text(this.item.authors)
+            .fontSize(14)
+            .fontColor(colors.authorColor)
+        }
         Blank(10)
         Flex() {
           Text(timestampToDate(this.item.lastUpdateTime))
