@@ -2,8 +2,7 @@ import { Error } from "./components/Error"
 import { Loading } from "./components/Loading"
 import { MangaCard, MangaCardData } from "./components/MangaCard"
 import rust, { ComicChapter, ComicChapterInfo, ComicDetail, ComicViewLog } from 'libdaisy_native.so'
-import { navEvents, navNamesJoin, navStack } from "./components/Nav"
-import { Uuid } from './components/Uuid';
+import { navStack } from "./components/Nav"
 import { MangaReaderParam } from "./MangaReader"
 import { hilog } from "@kit.PerformanceAnalysisKit"
 
@@ -14,34 +13,18 @@ export struct MangaInfo {
   @Local mangaCardData: MangaCardData | null = null;
   @Local mangaDetail: ComicDetail | null = null;
   @Local mangaViewLog: ComicViewLog | null = null;
-  @Local uuid: string = '';
-  @Local namesJoin: string = ''
-
-  aboutToAppear(): void {
-    this.namesJoin = navNamesJoin()
-    this.uuid = Uuid.v4()
-    navEvents.set(this.uuid, (nj) => {
-      if (nj == this.namesJoin) {
-        this.reloadViewLog()
-      }
-    })
-  }
-
-  aboutToDisappear(): void {
-    navEvents.delete(this.uuid)
-  }
+  @Local firstShow: boolean = true;
 
   async reloadViewLog() {
     hilog.warn(0, 'testTag', '%{public}s', 'reloadViewLog');
     this.mangaViewLog = await rust.viewLogByComicId(this.mangaCardData!.id);
-    hilog.warn(0, 'testTag', '%{public}s', JSON.stringify(this.mangaViewLog));
   }
 
   async init() {
     this.loadState = '';
     try {
       this.mangaDetail = await rust.comicDetail(this.mangaCardData!.id);
-      this.mangaViewLog = await rust.viewLogByComicId(this.mangaCardData!.id);
+      await this.reloadViewLog();
       this.loadState = 'success'
     } catch (e) {
       this.loadState = `ERROR : ${e}`
@@ -169,6 +152,14 @@ export struct MangaInfo {
     }.onReady((c) => {
       this.mangaCardData = c.pathInfo.param as MangaCardData;
       this.init()
-    }).width('100%').height('100%')
+    })
+    .onShown(() => {
+      if (this.firstShow) {
+        this.firstShow = false
+        return
+      }
+      this.reloadViewLog()
+    })
+    .width('100%').height('100%')
   }
 }
