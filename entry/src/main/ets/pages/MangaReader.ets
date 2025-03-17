@@ -132,7 +132,7 @@ export struct MangaReader {
       Slider({
         value: this.sliderValue,
         min: 0,
-        max: this.data!.pageUrl.length - 1,
+        max: this.data!.pageUrlHd.length - 1,
         step: 1,
       })
         .onTouch((e) => {
@@ -169,7 +169,7 @@ export struct MangaReader {
   @Builder
   sliding() {
     Row() {
-      Text(`${this.sliderOutValue! + 1} / ${this.data!.pageUrl.length}`)
+      Text(`${this.sliderOutValue! + 1} / ${this.data!.pageUrlHd.length}`)
         .align(Alignment.Center)
         .alignSelf(ItemAlign.Center)
         .textAlign(TextAlign.Center)
@@ -187,7 +187,7 @@ export struct MangaReader {
     List({ scroller: this.listScroller, initialIndex: this.param!.pageRank > 0 ? this.param!.pageRank + 1 : null }) {
       ListItem().height(this.toolBarHeight)
       ForEach(
-        data.pageUrl,
+        data.pageUrlHd,
         (image: string, idx) => {
           ListItem() {
             CachedImage({
@@ -236,13 +236,13 @@ export struct MangaReader {
     if (this.data != null) {
       if (start < 1) {
         this.sliderValue = 0
-      } else if (start >= this.data!.pageUrl.length) {
-        this.sliderValue = this.data!.pageUrl.length - 1
+      } else if (start >= this.data!.pageUrlHd.length) {
+        this.sliderValue = this.data!.pageUrlHd.length - 1
       } else {
         this.sliderValue = start - 1
       }
     }
-    if (start > 0 && start <= this.data!.pageUrl.length) {
+    if (start > 0 && start <= this.data!.pageUrlHd.length) {
       rust.comicViewPage(
         this.param!.manga.id,
         this.param!.chapterId,

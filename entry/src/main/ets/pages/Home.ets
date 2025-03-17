@@ -36,7 +36,7 @@ struct Home {
       MangaReader()
     } else if (name == 'pages/NovelInfo') {
       NovelInfo()
-    } else if (name == 'pages/MangaReader') {
+    } else if (name == 'pages/NovelReader') {
       NovelReader()
     } else {
       NavDestination() {

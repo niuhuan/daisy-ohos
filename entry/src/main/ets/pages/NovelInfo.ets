@@ -141,6 +141,7 @@ export struct NovelInfo {
           "pages/NovelReader",
           {
             novel: this.novelDetail!,
+            novelChapters: this.novelChapters!,
             chapterId: chapterId!,
             process: process,
           } as NovelReaderParam,
