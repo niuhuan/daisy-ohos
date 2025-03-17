@@ -1,7 +1,7 @@
 {
   "app": {
     "bundleName": "opensource.oh.daisy",
-    "patchVersionCode": 2000066,
+    "patchVersionCode": 2000067,
     "versionCode": 1000000
   },
   "module": {
