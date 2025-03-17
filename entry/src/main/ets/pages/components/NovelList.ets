@@ -1,14 +1,14 @@
-import rust, { NovelInFilter } from "libdaisy_native.so";
+import rust from "libdaisy_native.so";
 import { loginListen } from './Context';
 import { Error } from './Error'
 import { Loading } from './Loading';
 import { navStack } from './Nav';
 import { Nothing } from './Nothing';
 import { promptAction } from '@kit.ArkUI';
-import { NovelCard } from "./NovelCard";
+import { NovelCard, NovelCardData } from "./NovelCard";
 
 interface NovelLoader {
-  load(page: number): PromiseLike<Array<NovelInFilter>>;
+  load(page: number): PromiseLike<Array<NovelCardData>>;
 }
 
 
@@ -18,7 +18,7 @@ export struct NovelList {
   @State loading: boolean = false;
   @State needLoadPageNumber: number = 0;
   @State end: boolean = false;
-  @State mangaList: Array<NovelInFilter> = [];
+  @State mangaList: Array<NovelCardData> = [];
   @State error: boolean = false;
   @State errorMessage: string = "";
   @Prop @Require loader: NovelLoader;
@@ -65,7 +65,7 @@ export struct NovelList {
       }
     } else {
       List({ scroller: this.scroller }) {
-        ForEach(this.mangaList, (item: NovelInFilter, idx: number) => {
+        ForEach(this.mangaList, (item: NovelCardData, idx: number) => {
           ListItem() {
             NovelCard({ item: item })
           }.onClick(() => {
@@ -85,7 +85,7 @@ export struct NovelList {
   paddingLastItem() {
   }
 
-  goToMangaInfo(item: NovelInFilter) {
+  goToMangaInfo(item: NovelCardData) {
     if (loginListen.loginState.status == -1 || loginListen.loginState.status == 2) {
       promptAction.showToast({
         message: '请先登录',

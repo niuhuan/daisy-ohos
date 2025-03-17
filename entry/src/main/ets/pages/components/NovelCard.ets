@@ -3,10 +3,17 @@ import { CachedImage } from './CachedImage'
 import { materialIconData, materialIconsFontFamily } from './MaterialIcons'
 import { colors } from './Themes'
 
+export interface NovelCardData {
+  id: number
+  name: string
+  cover: string
+  authors?: string
+}
+
 @Entry
 @Component
 export struct NovelCard {
-  @Require @Prop item: NovelInFilter
+  @Require @Prop item: NovelCardData
 
   build() {
     Flex() {
