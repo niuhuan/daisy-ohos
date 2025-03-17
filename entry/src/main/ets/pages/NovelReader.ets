@@ -17,6 +17,7 @@ export interface NovelReaderParam {
 @Component
 export struct NovelReader {
   private listScroller: ListScroller = new ListScroller()
+  private webController: WebController = new WebController()
   private context = getContext(this) as common.UIAbilityContext;
   @State param: NovelReaderParam | null = null
   @State loadingState: number = 0
@@ -26,9 +27,6 @@ export struct NovelReader {
   @State data: string | null = null
   @State toolBarHeight: number = 0
   @State fullScreen: boolean = false
-  @State sliderValue: number = 0
-  @State sliderInValue: number | undefined = undefined
-  @State sliderOutValue: number = 0
 
   async init() {
     this.loadingState = 0
@@ -49,10 +47,10 @@ export struct NovelReader {
           }
         }
       }
-      this.data = await rust.novelContent(
+      this.data = this.processData(await rust.novelContent(
         this.volume!.id,
         this.chapter!.chapterId,
-      );
+      ));
       await rust.novelViewPage(
         this.param!.novel.id,
         this.volume!.id,
@@ -69,13 +67,39 @@ export struct NovelReader {
     }
   }
 
+  processData(bookText: string): string {
+    bookText = bookText.replaceAll("<br />\n", "\n");
+    bookText = bookText.replaceAll("<br />\n", "\n");
+    bookText = bookText.replaceAll("<br />", "\n");
+    bookText = bookText.replaceAll("<br/>", "\n");
+    bookText = bookText.replaceAll("&nbsp;", " ");
+    bookText = bookText.replaceAll("&amp;", "&");
+    bookText = bookText.replaceAll("&hellip;", "…");
+    bookText = bookText.replaceAll("&bull;", "·");
+    bookText = bookText.replaceAll("&lt;", "<");
+    bookText = bookText.replaceAll("&gt;", ">");
+    bookText = bookText.replaceAll("&quot;", "\"");
+    bookText = bookText.replaceAll("&copy;", "©");
+    bookText = bookText.replaceAll("&reg;", "®");
+    bookText = bookText.replaceAll("&times;", "×");
+    bookText = bookText.replaceAll("&pide;", "÷");
+    bookText = bookText.replaceAll("&emsp;", " ");
+    bookText = bookText.replaceAll("&ensp;", " ");
+    bookText = bookText.replaceAll("&ldquo;", "“");
+    bookText = bookText.replaceAll("&rdquo;", "”");
+    bookText = bookText.replaceAll("&mdash;", "—");
+    bookText = bookText.replaceAll("&middot;", "·");
+    bookText = bookText.replaceAll("&lsquo;", "‘");
+    bookText = bookText.replaceAll("&rsquo;", "’");
+    bookText = bookText.trim();
+    return bookText
+  }
+
   setChapter(chapter: NovelChapter) {
     this.loadingState = 0
     this.listScroller.scrollTo({ xOffset: 0, yOffset: 0 })
     this.param!.chapterId = chapter.chapterId
     this.data = null
-    this.sliderValue = 0
-    this.sliderInValue = undefined
     this.init()
   }
 
@@ -88,7 +112,7 @@ export struct NovelReader {
       this.param = context.pathInfo.param! as NovelReaderParam
       this.init()
     })
-    .backgroundColor('#000')
+    .backgroundColor('#fff')
     .hideTitleBar(true)
     .ignoreLayoutSafeArea([LayoutSafeAreaType.SYSTEM]) // LayoutSafeAreaEdge
   }
@@ -103,9 +127,6 @@ export struct NovelReader {
         if (!this.fullScreen) {
           this.barTop()
           this.barBottom()
-        }
-        if (this.sliderInValue != undefined) {
-          // this.sliding()
         }
       }
     } else {
@@ -141,31 +162,6 @@ export struct NovelReader {
   @Builder
   barBottom() {
     Flex() {
-      // Slider({
-      //   value: this.sliderValue,
-      //   min: 0,
-      //   max: this.data!.pageUrl.length - 1,
-      //   step: 1,
-      // })
-      //   .onTouch((e) => {
-      //     if (e.type == TouchType.Down) {
-      //       this.sliderInValue = this.sliderValue
-      //       this.sliderOutValue = this.sliderInValue
-      //     }
-      //     if (e.type == TouchType.Up) {
-      //       console.error(`LEAVE ${this.sliderInValue} ${this.sliderOutValue}`)
-      //       if (this.sliderOutValue != this.sliderInValue) {
-      //         this.sliderValue = this.sliderOutValue
-      //         this.listScroller.scrollToIndex(this.sliderValue + 1)
-      //       }
-      //       this.sliderInValue = undefined
-      //     }
-      //   })
-      //   .onChange((e) => {
-      //     if (this.sliderValue != undefined) {
-      //       this.sliderOutValue = e
-      //     }
-      //   })
     }
     .position({ bottom: 0 })
     .padding({
@@ -178,30 +174,15 @@ export struct NovelReader {
 
   }
 
-  // @Builder
-  // sliding() {
-  //   Row() {
-  //     Text(`${this.sliderOutValue! + 1} / ${this.data!.pageUrl.length}`)
-  //       .align(Alignment.Center)
-  //       .alignSelf(ItemAlign.Center)
-  //       .textAlign(TextAlign.Center)
-  //       .fontColor('#FFF')
-  //       .fontWeight(FontWeight.Bold)
-  //       .fontSize(35)
-  //       .borderRadius(8)
-  //       .backgroundColor('#99000000')
-  //       .padding(30)
-  //   }.alignItems(VerticalAlign.Center)
-  // }
-
   @Builder
   reader(param: NovelReaderParam, data: string) {
+
     List({ scroller: this.listScroller }) {
       ListItem().height(this.toolBarHeight)
 
       ListItem() {
         Text(data)
-          .fontColor('#fff')
+          .lineHeight(28)
       }
 
       ListItem().height(this.toolBarHeight)
@@ -224,6 +205,7 @@ export struct NovelReader {
     }
     .width('100%')
     .height('100%')
+    .padding({ left: 20, right: 20 })
     .onScrollIndex((s, e, c) => this.onScrollIndex(s, e, c))
     .onClick(() => {
       this.fullScreen = !this.fullScreen
@@ -231,24 +213,7 @@ export struct NovelReader {
   }
 
   onScrollIndex(start: number, end: number, center: number): void {
-    // if (this.data != null) {
-    //   if (start < 1) {
-    //     this.sliderValue = 0
-    //   } else if (start >= this.data!.pageUrl.length) {
-    //     this.sliderValue = this.data!.pageUrl.length - 1
-    //   } else {
-    //     this.sliderValue = start - 1
-    //   }
-    // }
-    // if (start > 0 && start <= this.data!.pageUrl.length) {
-    //   rust.comicViewPage(
-    //     this.param!.manga.id,
-    //     this.param!.chapterId,
-    //     this.chapter!.chapterTitle,
-    //     this.chapter!.chapterOrder,
-    //     start - 1,
-    //   )
-    // }
+
   }
 
   toNextChapter() {
@@ -260,7 +225,7 @@ export struct NovelReader {
 
   nextChapterValue(): NovelChapter | null {
     let acc = false
-    let vos = this.param!.novelChapters.sort((a,b) => a.rank - b.rank);
+    let vos = this.param!.novelChapters.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < vos.length; i++) {
       let g = vos[i]!;
       let cs: Array<NovelChapter> = g.chapters.sort((a, b) => a.chapterOrder - b.chapterOrder);
