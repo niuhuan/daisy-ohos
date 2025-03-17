@@ -11,7 +11,7 @@ struct Index {
 
   async init() {
     await rust.autoClean(3600 * 24 * 7)
-    await context.login()
+    await context.reLogin()
     router.replaceUrl({
       url: 'pages/Home',
     })

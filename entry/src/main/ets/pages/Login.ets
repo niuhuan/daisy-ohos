@@ -48,9 +48,7 @@ export struct Login {
   }
 
   onSave() {
-    saveProperty('username', this.username)
-    saveProperty('password', this.password)
-    context.login()
+    context.login(this.username, this.password)
     navStack.pop()
   }
 }

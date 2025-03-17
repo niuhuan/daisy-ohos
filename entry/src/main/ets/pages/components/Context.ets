@@ -5,23 +5,28 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 @ObservedV2
 export class LoginListen {
   @Trace loginState: LoginInfo = {
-    status: -1, // -1 未登录 / -2 登录中 / 0 / 2
+    status: -1, // -1 未登录 / -2 登录中 / 0 登录成功 / 2 登录失败
     message: '',
   }
 }
 
 class Context {
-
-  async login() {
+  async reLogin() {
     loginListen.loginState = {
       status: -2,
       message: '',
     }
-    let username = await native.loadProperty("username");
-    let password = await native.loadProperty("password");
+    loginListen.loginState = await native.reLogin();
+  }
+
+  async login(username: string, password: string) {
+    loginListen.loginState = {
+      status: -2,
+      message: '',
+    }
     hilog.warn(0, 'testTag', '%{public}s', 'logging');
     if (username.length > 0 && password.length > 0) {
-      loginListen.loginState = await native.reLogin(username, password);
+      loginListen.loginState = await native.login(username, password);
     } else {
       loginListen.loginState = {
         status: -1,

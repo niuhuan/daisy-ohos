@@ -1,8 +1,10 @@
+import { loginListen } from './Context';
 import { Error } from './Error'
 import { Loading } from './Loading';
 import { MangaCard, MangaCardData } from './MangaCard';
 import { navStack } from './Nav';
 import { Nothing } from './Nothing';
+import { promptAction } from '@kit.ArkUI';
 
 interface MangaLoader {
   load(page: number): PromiseLike<Array<MangaCardData>>;
@@ -82,6 +84,24 @@ export struct MangaList {
   }
 
   goToMangaInfo(item: MangaCardData) {
+    if (loginListen.loginState.status == -1 || loginListen.loginState.status == 2) {
+      promptAction.showToast({
+        message: '请先登录',
+        duration: 2000,
+        showMode: promptAction.ToastShowMode.TOP_MOST,
+        bottom: 100,
+      })
+      return
+    }
+    if (loginListen.loginState.status == -2) {
+      promptAction.showToast({
+        message: '正在登录, 请稍后',
+        duration: 2000,
+        showMode: promptAction.ToastShowMode.TOP_MOST,
+        bottom: 100,
+      })
+      return
+    }
     navStack.pushPath(new NavPathInfo(
       'pages/MangaInfo',
       item,

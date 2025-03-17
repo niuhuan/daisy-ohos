@@ -13,12 +13,10 @@ use crate::local::join_paths;
 use crate::utils::hash_lock;
 use crate::{context, download_thread};
 use itertools::Itertools;
-use lazy_static::lazy_static;
 use napi_derive_ohos::napi;
 use serde_derive::{Deserialize, Serialize};
 use serde_json::to_string;
 use std::time::Duration;
-use tokio::sync::Mutex;
 
 type Result<T> = std::result::Result<T, std::io::Error>;
 
@@ -50,14 +48,58 @@ pub struct LoginInfo {
 }
 
 #[napi]
-pub async fn re_login(nickname: String, passwd: String) -> LoginInfo {
+pub async fn re_login() -> LoginInfo {
+    let client = CLIENT.read().await;
+    let per_data = if let Ok(pre_data) = property::load_property("pre_data".to_owned()).await {
+        if let Ok(login_data) = serde_json::from_str::<LoginData>(pre_data.as_str()) {
+            client
+                .set_user_ticket(login_data.uid.clone(), login_data.dmzj_token.clone())
+                .await;
+            Some(login_data)
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+    if let Some(per_data) = per_data {
+        let info = LoginInfo {
+            status: 0,
+            message: "".to_string(),
+            data: Some(per_data),
+        };
+        return info;
+    }
+    drop(client);
+    let username = if let Ok(username) = property::load_property("username".to_owned()).await {
+        Some(username)
+    } else {
+        None
+    };
+    let password = if let Ok(password) = property::load_property("password".to_owned()).await {
+        Some(password)
+    } else {
+        None
+    };
+    if username.is_none() || password.is_none() {
+        return LoginInfo {
+            status: -1,
+            message: "no username or password".to_string(),
+            data: None,
+        };
+    }
+    login(username.unwrap(), password.unwrap()).await
+}
+
+#[napi]
+pub async fn login(username: String, passwd: String) -> LoginInfo {
     let client = CLIENT.read().await;
     let password_md5_uppercase = md5::compute(passwd.as_bytes())
         .0
         .iter()
         .map(|b| format!("{:02X}", b))
         .collect::<String>();
-    let login_data = match client.login(nickname, password_md5_uppercase).await {
+    let login_data = match client.login(username.clone(), password_md5_uppercase).await {
         Ok(value) => value,
         Err(e) => {
             let err_data = LoginInfo {
@@ -98,6 +140,8 @@ pub async fn re_login(nickname: String, passwd: String) -> LoginInfo {
         },
     )
     .await;
+    let _ = save_property("username".to_owned(), username).await;
+    let _ = save_property("password".to_owned(), passwd).await;
     let info = LoginInfo {
         status: 0,
         message: "".to_string(),
