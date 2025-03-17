@@ -226,17 +226,6 @@ export struct MangaReader {
     }
     .width('100%')
     .height('100%')
-    .onScrollIndex((s, e, c) => {
-      if (this.data != null) {
-        if (s < 1) {
-          this.sliderValue = 0
-        } else if (s >= this.data!.pageUrl.length) {
-          this.sliderValue = this.data!.pageUrl.length - 1
-        } else {
-          this.sliderValue = s - 1
-        }
-      }
-    })
     .onScrollIndex((s, e, c) => this.onScrollIndex(s, e, c))
     .onClick(() => {
       this.fullScreen = !this.fullScreen
@@ -244,13 +233,22 @@ export struct MangaReader {
   }
 
   onScrollIndex(start: number, end: number, center: number): void {
-    if (center > 0 && center <= this.data!.pageUrl.length) {
+    if (this.data != null) {
+      if (start < 1) {
+        this.sliderValue = 0
+      } else if (start >= this.data!.pageUrl.length) {
+        this.sliderValue = this.data!.pageUrl.length - 1
+      } else {
+        this.sliderValue = start - 1
+      }
+    }
+    if (start > 0 && start <= this.data!.pageUrl.length) {
       rust.comicViewPage(
         this.param!.manga.id,
         this.param!.chapterId,
         this.chapter!.chapterTitle,
         this.chapter!.chapterOrder,
-        center - 1,
+        start - 1,
       )
     }
   }

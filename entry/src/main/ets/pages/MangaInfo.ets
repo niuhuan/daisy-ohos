@@ -5,16 +5,17 @@ import rust, { ComicChapter, ComicChapterInfo, ComicDetail, ComicViewLog } from 
 import { navEvents, navNamesJoin, navStack } from "./components/Nav"
 import { Uuid } from './components/Uuid';
 import { MangaReaderParam } from "./MangaReader"
+import { hilog } from "@kit.PerformanceAnalysisKit"
 
 @Entry
-@Component
+@ComponentV2
 export struct MangaInfo {
-  @State loadState: '' | 'success' | string = ''
-  @State mangaCardData: MangaCardData | null = null;
-  @State mangaDetail: ComicDetail | null = null;
-  @State mangaViewLog: ComicViewLog | null = null;
-  private uuid: string = '';
-  private namesJoin: string = ''
+  @Local loadState: '' | 'success' | string = ''
+  @Local mangaCardData: MangaCardData | null = null;
+  @Local mangaDetail: ComicDetail | null = null;
+  @Local mangaViewLog: ComicViewLog | null = null;
+  @Local uuid: string = '';
+  @Local namesJoin: string = ''
 
   aboutToAppear(): void {
     this.namesJoin = navNamesJoin()
@@ -31,7 +32,9 @@ export struct MangaInfo {
   }
 
   async reloadViewLog() {
+    hilog.warn(0, 'testTag', '%{public}s', 'reloadViewLog');
     this.mangaViewLog = await rust.viewLogByComicId(this.mangaCardData!.id);
+    hilog.warn(0, 'testTag', '%{public}s', JSON.stringify(this.mangaViewLog));
   }
 
   async init() {
