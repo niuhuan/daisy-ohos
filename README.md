@@ -13,6 +13,9 @@ Daisy OHOS
 
 ## 软件截图
 
+<img src="images/01.png" width="204" /><img src="images/02.png" width="204" />
+<img src="images/03.png" width="204" /><img src="images/04.png" width="204" />
+
 ## 技术架构
 
 客户端使用前后端分离架构, ArkUI作为渲染框架. rust作为底层调度网络和文件系统.

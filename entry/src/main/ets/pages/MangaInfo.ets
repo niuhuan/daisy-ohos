@@ -5,6 +5,7 @@ import rust, { ComicChapter, ComicChapterInfo, ComicDetail, ComicViewLog } from 
 import { navStack } from "./components/Nav"
 import { MangaReaderParam } from "./MangaReader"
 import { hilog } from "@kit.PerformanceAnalysisKit"
+import { colors } from "./components/Themes"
 
 @Entry
 @Component
@@ -37,6 +38,17 @@ export struct MangaInfo {
 
       ListItem() {
         Column().height(30)
+      }
+
+      ListItem() {
+        Text(this.mangaDetail?.description)
+          .fontColor(colors.desc)
+          .fontSize(13)
+          .margin(20)
+      }
+
+      ListItem() {
+        Column().height(10)
       }
 
       if (this.mangaViewLog != null && this.mangaViewLog.chapterId > 0) {
