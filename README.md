@@ -1,8 +1,6 @@
 Daisy OHOS
 ==========
 
-daisy
-=====
 [![license](https://img.shields.io/github/license/niuhuan/daisy-ohos)](https://raw.githubusercontent.com/niuhuan/daisy-ohos/main/LICENSE)
 [![releases](https://img.shields.io/github/v/release/niuhuan/daisy-ohos)](https://github.com/niuhuan/daisy-ohos/releases)
 [![downloads](https://img.shields.io/github/downloads/niuhuan/daisy-ohos/total)](https://github.com/niuhuan/daisy-ohos/releases)
