@@ -10,6 +10,8 @@ import { AppStorageV2 } from "@kit.ArkUI"
 import { MangaCard } from "./components/MangaCard"
 import { MangaInfo } from "./MangaInfo"
 import { MangaReader } from "./MangaReader"
+import { NovelReader } from "./NovelReader"
+import { NovelInfo } from "./NovelInfo"
 
 @Entry
 @ComponentV2
@@ -32,6 +34,10 @@ struct Home {
       MangaInfo()
     } else if (name == 'pages/MangaReader') {
       MangaReader()
+    } else if (name == 'pages/NovelInfo') {
+      NovelInfo()
+    } else if (name == 'pages/MangaReader') {
+      NovelReader()
     } else {
       NavDestination() {
         Text("未找到页面 404")
