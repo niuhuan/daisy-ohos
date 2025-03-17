@@ -4,8 +4,8 @@ Daisy OHOS
 daisy
 =====
 [![license](https://img.shields.io/github/license/niuhuan/daisy-ohos)](https://raw.githubusercontent.com/niuhuan/daisy-ohos/main/LICENSE)
-[![releases](https://img.shields.io/github/v/release/niuhuan/daisy)](https://github.com/niuhuan/daisy-ohos/releases)
-[![downloads](https://img.shields.io/github/downloads/niuhuan/daisy/total)](https://github.com/niuhuan/daisy-ohos/releases)
+[![releases](https://img.shields.io/github/v/release/niuhuan/daisy-ohos)](https://github.com/niuhuan/daisy-ohos/releases)
+[![downloads](https://img.shields.io/github/downloads/niuhuan/daisy-ohos/total)](https://github.com/niuhuan/daisy-ohos/releases)
 
 一个简洁大方的漫画与轻小说客户端, 为鸿蒙NEXT系统构建.
 
