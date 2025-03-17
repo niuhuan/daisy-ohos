@@ -19,8 +19,6 @@ daisy
 
 客户端使用前后端分离架构, ArkUI作为渲染框架. rust作为底层调度网络和文件系统.
 
-![](https://raw.githubusercontent.com/fzyzcjy/flutter_rust_bridge/master/book/logo.png)
-
 ### 如何构建
 
 1. 安装DevEco-Studio, rust-lang
