@@ -6,15 +6,20 @@ import { navStack } from "./components/Nav"
 import { MangaReaderParam } from "./MangaReader"
 import { hilog } from "@kit.PerformanceAnalysisKit"
 import { colors } from "./components/Themes"
+import { loginListen, LoginListen } from "./components/Context"
+import { AppStorageV2, promptAction } from "@kit.ArkUI"
 
 @Entry
-@Component
+@ComponentV2
 export struct MangaInfo {
-  @State loadState: '' | 'success' | string = ''
-  @State mangaCardData: MangaCardData | null = null;
-  @State mangaDetail: ComicDetail | null = null;
-  @State mangaViewLog: ComicViewLog | null = null;
-  @State firstShow: boolean = true;
+  @Local loadState: '' | 'success' | string = ''
+  @Local mangaCardData: MangaCardData | null = null;
+  @Local mangaDetail: ComicDetail | null = null;
+  @Local mangaViewLog: ComicViewLog | null = null;
+  @Local firstShow: boolean = true;
+  @Local loginListen: LoginListen = AppStorageV2.connect(LoginListen, () => loginListen)!;
+  @Local subscribed: boolean = false;
+  @Local subscribing: boolean = false;
 
   async reloadViewLog() {
     hilog.warn(0, 'testTag', '%{public}s', 'reloadViewLog');
@@ -25,6 +30,9 @@ export struct MangaInfo {
     this.loadState = '';
     try {
       this.mangaDetail = await rust.comicDetail(this.mangaCardData!.id);
+      if (this.loginListen.loginState.status == 0) {
+        this.subscribed = await rust.subscribedObj(0, this.mangaDetail!.id);
+      }
       await this.reloadViewLog();
       this.loadState = 'success'
     } catch (e) {
@@ -162,6 +170,7 @@ export struct MangaInfo {
         }.layoutWeight(1)
       }.width('100%').height('100%')
     }
+    .menus(this.menus())
     .onReady((c) => {
       this.mangaCardData = c.pathInfo.param as MangaCardData;
       this.init()
@@ -178,5 +187,60 @@ export struct MangaInfo {
     })
     .width('100%')
     .height('100%')
+  }
+
+  @Builder
+  menus() {
+    if ('success' == this.loadState) {
+      if (this.loginListen.loginState.status == 0) {
+        Row() {
+          Text() {
+            SymbolSpan(
+              this.subscribing ? $r('sys.symbol.repeat') :
+                this.subscribed ? $r('sys.symbol.folder_fill') : $r('sys.symbol.folder')
+            )
+              .fontWeight(FontWeight.Normal)
+              .fontSize(25)
+              .fontColor([colors.icon])
+          }
+          .onClick(() => {
+            this.onSubscribedClick()
+          })
+        }.alignItems(VerticalAlign.Center)
+        .height('100%')
+        .padding({ right: 25 })
+      }
+    }
+  }
+
+  async onSubscribedClick() {
+    if (this.subscribing) {
+      return;
+    }
+    this.subscribing = true;
+    try {
+      // "mh" , "xs"
+      if (this.subscribed) {
+        await rust.subscribeCancel("mh", this.mangaDetail!.id);
+      } else {
+        await rust.subscribeAdd("mh", this.mangaDetail!.id);
+      }
+      this.subscribed = !this.subscribed;
+      promptAction.showToast({
+        message: `订阅已` + (this.subscribed ? "添加" : "取消"),
+        duration: 2000,
+        showMode: promptAction.ToastShowMode.DEFAULT,
+        bottom: 100,
+      })
+    } catch (e) {
+      promptAction.showToast({
+        message: "操作失败",
+        duration: 2000,
+        showMode: promptAction.ToastShowMode.DEFAULT,
+        bottom: 100,
+      })
+    } finally {
+      this.subscribing = false;
+    }
   }
 }

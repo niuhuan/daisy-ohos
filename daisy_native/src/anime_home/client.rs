@@ -76,7 +76,7 @@ impl Client {
         Self {
             agent: reqwest::ClientBuilder::new()
                 .user_agent("Android,DMZJ,10;")
-                .timeout(std::time::Duration::from_secs(10))
+                .timeout(std::time::Duration::from_secs(30))
                 .build()
                 .unwrap(),
             user_ticket: RwLock::new((String::default(), String::default())),

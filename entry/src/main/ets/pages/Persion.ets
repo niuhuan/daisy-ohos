@@ -167,7 +167,7 @@ export struct Person {
         promptAction.showToast({
           message: '请先登录',
           duration: 2000,
-          showMode: promptAction.ToastShowMode.TOP_MOST,
+          showMode: promptAction.ToastShowMode.DEFAULT,
           bottom: 100,
         })
         return
@@ -176,7 +176,7 @@ export struct Person {
         promptAction.showToast({
           message: '正在登录, 请稍后',
           duration: 2000,
-          showMode: promptAction.ToastShowMode.TOP_MOST,
+          showMode: promptAction.ToastShowMode.DEFAULT,
           bottom: 100,
         })
         return
