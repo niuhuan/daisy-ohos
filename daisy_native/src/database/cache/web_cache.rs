@@ -8,6 +8,7 @@ use std::future::Future;
 use std::ops::Deref;
 use std::pin::Pin;
 use std::time::Duration;
+use crate::utils::hash_lock;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "web_cache")]
@@ -43,9 +44,11 @@ pub(crate) async fn cache_first<T: for<'de> serde::Deserialize<'de> + serde::Ser
     expire: Duration,
     pin: Pin<Box<dyn Future<Output=anyhow::Result<T>> + Send>>,
 ) -> anyhow::Result<T> {
+    let _lock = hash_lock(&key).await;
     let time = chrono::Local::now().timestamp_millis();
     let db = CACHE_DATABASE.get().unwrap().lock().await;
     let in_db = Entity::find_by_id(key.clone()).one(db.deref()).await?;
+    drop(db);
     if let Some(ref model) = in_db {
         if time < (model.cache_time + expire.as_millis() as i64) {
             return Ok(serde_json::from_str(&model.cache_content)?);
@@ -53,6 +56,7 @@ pub(crate) async fn cache_first<T: for<'de> serde::Deserialize<'de> + serde::Ser
     };
     let t = pin.await?;
     let content = serde_json::to_string(&t)?;
+    let db = CACHE_DATABASE.get().unwrap().lock().await;
     if let Some(_) = in_db {
         Entity::update_many()
             .filter(Column::CacheKey.eq(key.clone()))
@@ -70,6 +74,7 @@ pub(crate) async fn cache_first<T: for<'de> serde::Deserialize<'de> + serde::Ser
             .insert(db.deref())
             .await?;
     }
+    drop(db);
     Ok(t)
 }
 

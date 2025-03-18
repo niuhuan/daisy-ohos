@@ -51,20 +51,20 @@ export struct MangaCard {
             .fontColor(colors.authorColor)
         }
         Blank(10)
-        Flex() {
+        Flex({ wrap: FlexWrap.Wrap }) {
           if (this.item.lastUpdateTime != null) {
             Text(`更新时间 ${timestampToDate(this.item.lastUpdateTime)}`)
               .flexGrow(0)
               .flexShrink(0)
             Blank(1)
-              .width(20)
+              .width(30)
           }
           if (this.item.subUpdate != null) {
             Text(`更新至 ${this.item.subUpdate}`)
               .flexGrow(0)
               .flexShrink(0)
             Blank(1)
-              .width(20)
+              .width(30)
           }
           // Text(materialIconData('local_fire_department'))
           //   .fontFamily(materialIconsFontFamily)
