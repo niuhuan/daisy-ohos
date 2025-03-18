@@ -7,12 +7,13 @@ import { Manga } from "./Manga"
 import { Novel } from "./Novel"
 import { Person } from "./Persion"
 import { AppStorageV2 } from "@kit.ArkUI"
-import { MangaCard } from "./components/MangaCard"
 import { MangaInfo } from "./MangaInfo"
 import { MangaReader } from "./MangaReader"
 import { NovelReader } from "./NovelReader"
 import { NovelInfo } from "./NovelInfo"
 import { MangaHistories } from "./MangaHistories"
+import { NovelHistories } from "./NovelHistories"
+import { MangaSubscribed } from "./MangaSubscribed"
 
 @Entry
 @ComponentV2
@@ -37,10 +38,14 @@ struct Home {
       MangaReader()
     } else if (name == 'pages/MangaHistories') {
       MangaHistories()
+    }  else if (name == 'pages/MangaSubscribed') {
+      MangaSubscribed()
     } else if (name == 'pages/NovelInfo') {
       NovelInfo()
     } else if (name == 'pages/NovelReader') {
       NovelReader()
+    } else if (name == 'pages/NovelHistories') {
+      NovelHistories()
     } else {
       NavDestination() {
         Text("未找到页面 404")

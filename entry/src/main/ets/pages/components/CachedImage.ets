@@ -29,7 +29,7 @@ export struct CachedImage {
     try {
       console.error(`load image : ${this.source}`)
       let ci = await rust.loadCacheImage(
-        this.source,
+        this.source.replace('https://xs.muwai.com', 'https://xs.idmzj.com'),
         this.useful ?? '',
         this.extendsFieldIntFirst,
         this.extendsFieldIntSecond,
@@ -65,7 +65,7 @@ export struct CachedImage {
         .objectFit(ImageFit.Cover)
         .renderFit(RenderFit.CENTER)
     } else {
-      Flex({justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center}) {
+      Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         if (this.state == 0) {
           Text(materialIconData('download'))
             .fontFamily(materialIconsFontFamily)

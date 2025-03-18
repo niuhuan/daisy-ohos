@@ -6,6 +6,7 @@ import { navStack } from './Nav';
 import { Nothing } from './Nothing';
 import { promptAction } from '@kit.ArkUI';
 import { NovelCard, NovelCardData } from "./NovelCard";
+import { hilog } from "@kit.PerformanceAnalysisKit";
 
 interface NovelLoader {
   load(page: number): PromiseLike<Array<NovelCardData>>;

@@ -2,7 +2,7 @@ import { loginListen, LoginListen } from "./components/Context"
 import { materialIconData, materialIconsFontFamily } from "./components/MaterialIcons"
 import { navStack } from "./components/Nav"
 import { colors } from "./components/Themes"
-import { AppStorageV2 } from "@kit.ArkUI"
+import { AppStorageV2, promptAction } from "@kit.ArkUI"
 
 @Entry
 @ComponentV2
@@ -32,6 +32,10 @@ export struct Person {
 
       ListItem() {
         this.novelHistories()
+      }
+
+      ListItem() {
+        this.mangaSubscribed()
       }
     }
   }
@@ -134,5 +138,53 @@ export struct Person {
       width: .4,
     })
     .width('100%')
+    .onClick(()=>{
+      navStack.pushPath(new NavPathInfo(
+        'pages/NovelHistories',
+        '',
+      ))
+    })
+  }
+
+  @Builder
+  mangaSubscribed() {
+    Flex({ direction: FlexDirection.Row }) {
+      Text('漫画 - 订阅')
+    }
+    .padding({
+      top: 18,
+      bottom: 18,
+      left: 25,
+      right: 25
+    })
+    .border({
+      color: '#33666666',
+      width: .4,
+    })
+    .width('100%')
+    .onClick(()=>{
+      if (loginListen.loginState.status == -1 || loginListen.loginState.status == 2) {
+        promptAction.showToast({
+          message: '请先登录',
+          duration: 2000,
+          showMode: promptAction.ToastShowMode.TOP_MOST,
+          bottom: 100,
+        })
+        return
+      }
+      if (loginListen.loginState.status == -2) {
+        promptAction.showToast({
+          message: '正在登录, 请稍后',
+          duration: 2000,
+          showMode: promptAction.ToastShowMode.TOP_MOST,
+          bottom: 100,
+        })
+        return
+      }
+      navStack.pushPath(new NavPathInfo(
+        'pages/MangaSubscribed',
+        '',
+      ))
+    })
   }
 }

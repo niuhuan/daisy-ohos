@@ -9,7 +9,8 @@ export interface MangaCardData {
   title: string
   authors?: string
   authorItems?: Array<Item>
-  lastUpdateTime: number
+  lastUpdateTime?: number,
+  subUpdate?: string,
 }
 
 @Entry
@@ -51,12 +52,20 @@ export struct MangaCard {
         }
         Blank(10)
         Flex() {
-          Text(timestampToDate(this.item.lastUpdateTime))
-            .flexGrow(0)
-            .flexShrink(0)
-          Blank(1)
-            .flexGrow(1)
-            .flexShrink(1)
+          if (this.item.lastUpdateTime != null) {
+            Text(`更新时间 ${timestampToDate(this.item.lastUpdateTime)}`)
+              .flexGrow(0)
+              .flexShrink(0)
+            Blank(1)
+              .width(20)
+          }
+          if (this.item.subUpdate != null) {
+            Text(`更新至 ${this.item.subUpdate}`)
+              .flexGrow(0)
+              .flexShrink(0)
+            Blank(1)
+              .width(20)
+          }
           // Text(materialIconData('local_fire_department'))
           //   .fontFamily(materialIconsFontFamily)
           //   .fontColor(colors.authorColor)
