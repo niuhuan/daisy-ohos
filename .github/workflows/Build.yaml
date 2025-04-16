@@ -16,6 +16,8 @@ jobs:
           apt install -y jq curl xz-utils build-essential rsync
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2024-12-02
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
