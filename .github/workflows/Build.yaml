@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build_release_assets:
     host: ubuntu-latest
     container: ghcr.io/sanchuanhehe/harmony-next-pipeline-docker/harmonyos-ci-image:latest
-    setps:
+    steps:
       - name: install dependencies
         run: |
           apt update
