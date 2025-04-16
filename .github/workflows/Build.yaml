@@ -34,7 +34,7 @@ jobs:
             rustup target add aarch64-unknown-linux-ohos
             make all
       - name: upload hap
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: entry/build/default/outputs/default/app/entry-default.hap
           name: entry-default.hap
