@@ -6,9 +6,10 @@ on:
 jobs:
 
   build_release_assets:
-    host: ubuntu-latest
+    name: build_release_assets
+    runs-on: ubuntu-latest
     container: ghcr.io/sanchuanhehe/harmony-next-pipeline-docker/harmonyos-ci-image:latest
-    steps:
+    setps:
       - name: install dependencies
         run: |
           apt update
