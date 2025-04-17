@@ -12,6 +12,6 @@ all: BuildRust
 BuildRust:
 	ohrs build --release -a arm64
 ifeq ($(IS_LINUX), true)
-    find dist -type f -name "*.so" ! -name "daisy_native" -exec rm -f {} \;
+	find dist -type f -name "*.so" ! -name "daisy_native" -exec rm -f {} \;
 endif
 	ohrs artifact
