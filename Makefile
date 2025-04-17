@@ -1,12 +1,9 @@
-Default: BuildRust CopyRust
+Default: BuildRust
 
-all: BuildRust CopyRust BuildHap
+all: BuildRust BuildHap
 
 BuildRust:
 	$(MAKE) -C daisy_native
 
-CopyRust:
-	rsync -av --exclude oh-package.json5 daisy_native/dist/ entry/libs/
-
 BuildHap:
-	hvigorw assembleApp --mode project -p product=default -p buildMode=debug --no-daemon
+	hvigorw assembleApp --mode project -p product=default -p buildMode=release --no-daemon

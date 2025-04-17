@@ -1,6 +1,6 @@
 import { context } from './components/Context'
 import router from '@ohos.router';
-import rust from 'libdaisy_native.so'
+import rust from 'daisy_native'
 
 @Entry
 @Component

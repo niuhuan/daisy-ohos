@@ -1,7 +1,7 @@
 import { Error } from "./components/Error"
 import { Loading } from "./components/Loading"
 import { MangaCard, MangaCardData } from "./components/MangaCard"
-import rust, { ComicChapter, ComicChapterInfo, ComicDetail, ComicViewLog } from 'libdaisy_native.so'
+import rust, { ComicChapter, ComicChapterInfo, ComicDetail, ComicViewLog } from 'daisy_native'
 import { navStack } from "./components/Nav"
 import { MangaReaderParam } from "./MangaReader"
 import { hilog } from "@kit.PerformanceAnalysisKit"

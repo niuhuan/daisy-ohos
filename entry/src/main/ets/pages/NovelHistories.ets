@@ -1,6 +1,6 @@
 import { NovelList } from "./components/NovelList";
-import rust, { ComicViewLog, NovelInFilter, NovelViewLog } from 'libdaisy_native.so'
-import { ComicUpdateListItem } from 'libdaisy_native.so'
+import rust, { ComicViewLog, NovelInFilter, NovelViewLog } from 'daisy_native'
+import { ComicUpdateListItem } from 'daisy_native'
 import { hilog } from "@kit.PerformanceAnalysisKit";
 import { NovelCardData } from "./components/NovelCard";
 

@@ -1,4 +1,4 @@
-import rust from 'libdaisy_native.so'
+import rust from 'daisy_native'
 import { url } from '@kit.ArkTS';
 import { image } from '@kit.ImageKit';
 import { materialIconData, materialIconsFontFamily } from './MaterialIcons';

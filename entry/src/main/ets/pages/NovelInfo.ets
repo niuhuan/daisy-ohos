@@ -1,6 +1,6 @@
 import { NovelChapter, NovelDetail, NovelInFilter, NovelVolume, NovelVolumeInfo } from "libdaisy_native.so";
 
-import rust, { } from 'libdaisy_native.so'
+import rust, { } from 'daisy_native'
 import { hilog } from "@kit.PerformanceAnalysisKit";
 import { NovelCard } from "./components/NovelCard";
 import { Loading } from "./components/Loading";

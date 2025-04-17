@@ -1,6 +1,6 @@
 import { common } from "@kit.AbilityKit";
 import { window } from "@kit.ArkUI";
-import rust, { ComicChapter, ComicChapterDetail, ComicChapterInfo, ComicDetail, ComicViewLog } from 'libdaisy_native.so'
+import rust, { ComicChapter, ComicChapterDetail, ComicChapterInfo, ComicDetail, ComicViewLog } from 'daisy_native'
 import { image } from "@kit.ImageKit";
 import { Loading } from "./components/Loading";
 import { Error } from "./components/Error";

@@ -1,5 +1,5 @@
-import native from 'libdaisy_native.so'
-import { LoginInfo } from 'libdaisy_native.so'
+import native from 'daisy_native'
+import { LoginInfo } from 'daisy_native'
 import { hilog } from '@kit.PerformanceAnalysisKit';
 
 @ObservedV2

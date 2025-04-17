@@ -1,7 +1,7 @@
-import { NovelChapter, NovelDetail, NovelVolume } from 'libdaisy_native.so'
+import { NovelChapter, NovelDetail, NovelVolume } from 'daisy_native'
 import { common } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
-import rust from 'libdaisy_native.so'
+import rust from 'daisy_native'
 import { Loading } from './components/Loading';
 import { Error } from './components/Error';
 import { navStack } from './components/Nav';

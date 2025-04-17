@@ -1,4 +1,4 @@
-import rust, { ComicDetail, Item } from 'libdaisy_native.so'
+import rust, { ComicDetail, Item } from 'daisy_native'
 import { CachedImage } from './CachedImage'
 import { materialIconData, materialIconsFontFamily } from './MaterialIcons'
 import { colors } from './Themes'

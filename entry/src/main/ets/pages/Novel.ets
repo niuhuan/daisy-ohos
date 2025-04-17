@@ -1,5 +1,5 @@
 import { NovelList } from "./components/NovelList"
-import rust, { NovelInFilter } from 'libdaisy_native.so'
+import rust, { NovelInFilter } from 'daisy_native'
 
 class Load {
   load(pageNumber: number): Promise<Array<NovelInFilter>> {

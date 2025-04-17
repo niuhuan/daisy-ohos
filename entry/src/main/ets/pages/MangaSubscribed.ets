@@ -1,6 +1,6 @@
 import { MangaList } from "./components/MangaList";
-import rust, { ComicViewLog, Subscribed } from 'libdaisy_native.so'
-import { ComicUpdateListItem } from 'libdaisy_native.so'
+import rust, { ComicViewLog, Subscribed } from 'daisy_native'
+import { ComicUpdateListItem } from 'daisy_native'
 import { MangaCardData } from "./components/MangaCard";
 import { hilog } from "@kit.PerformanceAnalysisKit";
 

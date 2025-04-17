@@ -1,7 +1,7 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import rust from 'libdaisy_native.so'
+import rust from 'daisy_native'
 
 const DOMAIN = 0x0000;
 

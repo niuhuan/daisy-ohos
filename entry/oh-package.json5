@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "libdaisy_native.so": "file:../daisy_native/package.har"
+    "daisy_native": "file:../daisy_native/package.har"
   }
 }
 
