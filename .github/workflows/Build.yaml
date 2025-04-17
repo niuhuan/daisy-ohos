@@ -34,7 +34,10 @@ jobs:
 
             cargo install -f ohrs
             rustup target add aarch64-unknown-linux-ohos
-            make all
+            make BuildRust 
+            find daisy_native/dist -type f -name "*.so" ! -name "libdaisy_native.so" -exec rm -f {} \;
+            make CopyRust
+            make BuildHap
       - name: upload hap
         uses: actions/upload-artifact@v4
         with:
